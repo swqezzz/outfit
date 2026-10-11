@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon Dressing</title>
+  <style>
+    :root {
+      --accent: #e0529c;
+      --bg: #fff5f9;
+      --surface: #ffffff;
+      --text: #3b1f2e;
+      --on-accent: #ffffff;
+      --muted: color-mix(in srgb, var(--text) 55%, var(--surface));
+      --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--surface));
+      --accent-mid: color-mix(in srgb, var(--accent) 30%, var(--surface));
+      --line: color-mix(in srgb, var(--text) 10%, var(--surface));
+      --card: color-mix(in srgb, var(--accent) 6%, var(--surface));
+      --radius: 22px;
+      --shadow: 0 10px 30px -12px color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 500px at 90% -10%, var(--accent-soft), transparent 60%),
+        radial-gradient(700px 400px at -10% 10%, var(--accent-soft), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      transition: background .3s, color .3s;
+    }
+
+    header, main { max-width: 980px; margin: auto; padding: 22px; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 6px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      width: 52px; height: 52px;
+      display: grid; place-items: center;
+      font-size: 26px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, white));
+      box-shadow: var(--shadow);
+    }
+    h1 { margin: 0; font-size: 1.6rem; letter-spacing: -.02em; }
+    header p { margin: 2px 0 0; color: var(--muted); font-size: .95rem; }
+    h2 { margin: 0 0 6px; letter-spacing: -.01em; }
+    p { line-height: 1.6; }
+
+    button, input, select {
+      font: inherit;
+      color: inherit;
+      border-radius: 14px;
+      padding: 13px 14px;
+    }
+
+    button {
+      background: var(--accent);
+      color: var(--on-accent);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform .15s, filter .15s, background .2s;
+    }
+    button:hover { filter: brightness(1.06); }
+    button:active { transform: scale(.97); }
+    button:disabled { opacity: .5; cursor: wait; }
+
+    input, select {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      background: var(--surface);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+    input[type=file] { padding: 10px; font-size: .9rem; }
+    input[type=color] { padding: 4px; height: 48px; cursor: pointer; }
+
+    label { display: block; margin: 14px 0; font-weight: 600; font-size: .92rem; }
+    label input, label select { margin-top: 7px; font-weight: 400; }
+
+    nav {
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+      display: flex;
+      gap: 6px;
+      padding: 6px;
+      margin-bottom: 24px;
+      background: color-mix(in srgb, var(--surface) 80%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+    nav button {
+      flex: 1;
+      background: transparent;
+      color: var(--muted);
+      padding: 11px 6px;
+      border-radius: 15px;
+    }
+    nav button.active {
+      background: var(--accent);
+      color: var(--on-accent);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      background: var(--surface);
+      padding: 22px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 10px;
+      min-width: 0;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .card img {
+      width: 100%;
+      height: 165px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: var(--card);
+    }
+    .card strong { display: block; margin: 10px 4px 4px; overflow-wrap: anywhere; }
+    .card small {
+      display: inline-block;
+      margin: 0 4px 4px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .card button { margin-top: 10px; width: 100%; }
+    .selected { outline: 3px solid var(--accent); box-shadow: var(--shadow); }
+
+    .secondary { background: var(--accent-soft); color: var(--accent); }
+    .danger { background: #fde8e4; color: #b3402b; }
+    .ghost { background: var(--accent-soft); color: var(--accent); }
+
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 150px; }
+
+    .empty {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      grid-column: 1 / -1;
+    }
+
+    #preview {
+      max-width: 100%;
+      height: 190px;
+      object-fit: contain;
+      display: block;
+      margin: 10px auto;
+      border-radius: 16px;
+    }
+
+    #message {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: var(--bg);
+      padding: 14px 22px;
+      border-radius: 16px;
+      width: max-content;
+      max-width: 90%;
+      z-index: 50;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,.4);
+    }
+
+    .look-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .look-photos img { height: 110px; }
+
+    summary { cursor: pointer; font-weight: 600; }
+
+    /* Réglages */
+    .colors { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+    .profile-switch { display: flex; gap: 10px; margin: 12px 0 8px; }
+    .profile-switch button { flex: 1; background: var(--accent-soft); color: var(--accent); }
+    .profile-switch button.on { background: var(--accent); color: var(--on-accent); }
+    .swatches { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .swatch {
+      width: 44px; height: 44px; padding: 0;
+      border-radius: 50%;
+      border: 3px solid var(--surface);
+      box-shadow: 0 0 0 1.5px var(--line);
+    }
+
+    /* Écran de démarrage */
+    #welcome {
+      position: fixed; inset: 0; z-index: 100;
+      display: grid; place-items: center;
+      padding: 22px;
+      background:
+        radial-gradient(600px 400px at 15% 15%, #ffd3e8, transparent 60%),
+        radial-gradient(600px 400px at 85% 85%, #cfe4ff, transparent 60%),
+        #fbf8fc;
+      overflow: auto;
+    }
+    #welcome .box { width: 100%; max-width: 560px; text-align: center; color: #2b2b3a; }
+    #welcome h1 { font-size: 2.2rem; margin-bottom: 6px; }
+    #welcome p { color: #6b6b80; margin: 0 0 26px; }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .choice {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      padding: 30px 12px;
+      border-radius: 28px;
+      font-size: 1.2rem;
+      color: white;
+      box-shadow: 0 20px 40px -18px rgba(0,0,0,.35);
+    }
+    .choice span { font-size: 3.2rem; }
+    .choice.girl { background: linear-gradient(145deg, #ff7ab8, #e0529c); }
+    .choice.boy { background: linear-gradient(145deg, #5aa2ff, #2f6fe0); }
+    .choice:hover { transform: translateY(-4px) scale(1.02); }
+
+    .home-btn {
+      background: var(--accent-soft);
+      color: var(--accent);
+      white-space: nowrap;
+      padding: 11px 16px;
+    }
+    .back-app {
+      margin-top: 22px;
+      background: rgba(255,255,255,.7);
+      color: #2b2b3a;
+      border: 1px solid rgba(0,0,0,.1);
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 560px) {
+      .home-btn { padding: 10px 12px; font-size: 13px; }
+      header .brand p { display: none; }
+    }
+
+    @media (max-width: 500px) {
+      header, main { padding: 16px; }
+      nav button { font-size: 12.5px; padding: 11px 4px; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu de démarrage -->
+  <div id="welcome" hidden>
+    <div class="box">
+      <h1>Bienvenue ✨</h1>
+      <p>Qui utilise le dressing ?</p>
+      <div class="choices">
+        <button class="choice girl" data-profile="girl" type="button">
+          <span>👗</span>Fille
+        </button>
+        <button class="choice boy" data-profile="boy" type="button">
+          <span>👕</span>Garçon
+        </button>
+      </div>
+      <button id="backToApp" class="back-app" type="button" hidden>← Retour à mon dressing</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="logo" id="logo">👗</div>
+      <div>
+        <h1>Mon Dressing</h1>
+        <p>Photographie tes vêtements. Compose tes tenues.</p>
+      </div>
+    </div>
+    <button id="homeBtn" class="home-btn" type="button">🏠 Menu principal</button>
+  </header>
+
+  <main>
+    <nav>
+      <button class="active" data-page="dressing">Dressing</button>
+      <button data-page="composer">Composer</button>
+      <button data-page="tenues">Tenues</button>
+      <button data-page="reglages">⚙️ Réglages</button>
+    </nav>
+
+    <section id="dressing">
+      <form id="addForm" class="panel">
+        <h2>Ajouter un vêtement</h2>
+
+        <div class="row">
+          <label>
+            Prendre une photo
+            <input id="camera" type="file" accept="image/*" capture="environment">
+          </label>
+
+          <label>
+            Choisir une photo
+            <input id="gallery" type="file" accept="image/*">
+          </label>
+        </div>
+
+        <img id="preview" alt="Photo du vêtement" hidden>
+
+        <label>
+          Nom
+          <input id="name" required maxlength="60" placeholder="Mon pull préféré">
+        </label>
+
+        <label>
+          Catégorie
+          <select id="category">
+            <option>Hauts</option>
+            <option>Bas</option>
+            <option>Robes</option>
+            <option>Vestes</option>
+            <option>Chaussures</option>
+            <option>Accessoires</option>
+          </select>
+        </label>
+
+        <button id="addButton">Ajouter au dressing</button>
+      </form>
+
+      <label>
+        Filtrer mes vêtements
+        <select id="filter">
+          <option>Tout</option>
+          <option>Hauts</option>
+          <option>Bas</option>
+          <option>Robes</option>
+          <option>Vestes</option>
+          <option>Chaussures</option>
+          <option>Accessoires</option>
+        </select>
+      </label>
+
+      <div id="clothes" class="grid"></div>
+    </section>
+
+    <section id="composer" hidden>
+      <div class="panel">
+        <h2>Compose ta tenue</h2>
+        <p>Touche les pièces que tu veux associer.</p>
+        <div id="selection" class="grid"></div>
+
+        <form id="outfitForm">
+          <label>
+            Nom de la tenue
+            <input id="outfitName" required maxlength="60" placeholder="Ma tenue du week-end">
+          </label>
+          <button>Enregistrer la tenue</button>
+        </form>
+      </div>
+
+      <div id="picker" class="grid"></div>
+    </section>
+
+    <section id="tenues" hidden>
+      <h2>Mes tenues enregistrées</h2>
+      <div id="outfits" class="grid"></div>
+    </section>
+
+    <section id="reglages" hidden>
+      <div class="panel">
+        <h2>Profil</h2>
+        <p style="margin:0;color:var(--muted)">Change le style de départ de l'application.</p>
+        <div class="profile-switch">
+          <button type="button" data-profile-set="girl">👗 Fille</button>
+          <button type="button" data-profile-set="boy">👕 Garçon</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Couleurs de l'application</h2>
+        <p style="margin:0;color:var(--muted)">Les changements sont appliqués tout de suite.</p>
+        <div class="colors">
+          <label>Couleur principale <input type="color" id="c-accent"></label>
+          <label>Fond <input type="color" id="c-bg"></label>
+          <label>Cartes et panneaux <input type="color" id="c-surface"></label>
+          <label>Texte <input type="color" id="c-text"></label>
+        </div>
+
+        <strong style="font-size:.92rem">Couleurs rapides</strong>
+        <div class="swatches" id="swatches"></div>
+
+        <div class="row" style="margin-top:20px">
+          <button type="button" id="darkMode" class="ghost">🌙 Thème sombre</button>
+          <button type="button" id="lightMode" class="ghost">☀️ Thème clair</button>
+          <button type="button" id="resetColors" class="danger">Réinitialiser</button>
+        </div>
+      </div>
+
+      <details class="panel">
+        <summary>Mes données et sauvegardes</summary>
+        <p>
+          Tes photos sont conservées dans ce navigateur, sur cet appareil.
+          Exporte une copie avant d’effacer les données du navigateur.
+        </p>
+        <button id="export" type="button">Exporter une sauvegarde</button>
+        <label>
+          Restaurer une sauvegarde
+          <input id="restore" type="file" accept=".json,application/json">
+        </label>
+      </details>
+    </section>
+  </main>
+
+  <div id="message" role="status" hidden></div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const categories = ["Hauts", "Bas", "Robes", "Vestes", "Chaussures", "Accessoires"];
+    const pages = ["dressing", "composer", "tenues", "reglages"];
+
+    const PRESETS = {
+      girl: { accent: "#e0529c", bg: "#fff5f9", surface: "#ffffff", text: "#3b1f2e" },
+      boy:  { accent: "#2f7de1", bg: "#f1f7ff", surface: "#ffffff", text: "#14283f" }
+    };
+    const QUICK = ["#e0529c", "#f06292", "#9c5fd6", "#2f7de1", "#14a3a3",
+                   "#2e9e5b", "#f08c2e", "#e5484d", "#40543b"];
+
+    let db;
+    let data = { clothes: [], outfits: [] };
+    let settings = null; // { profile, colors }
+    let selected = new Set();
+    let currentPhoto = null;
+    let messageTimer;
+
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+    function notify(text) {
+      $("message").textContent = text;
+      $("message").hidden = false;
+      clearTimeout(messageTimer);
+      messageTimer = setTimeout(() => { $("message").hidden = true; }, 4000);
+    }
+
+    /* ---------- Thème ---------- */
+    function readableOn(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255]
+        .map(v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
+      return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5 ? "#1c1c1c" : "#ffffff";
+    }
+
+    function applyTheme() {
+      if (!settings) return;
+      const c = settings.colors;
+      const root = document.documentElement.style;
+      root.setProperty("--accent", c.accent);
+      root.setProperty("--bg", c.bg);
+      root.setProperty("--surface", c.surface);
+      root.setProperty("--text", c.text);
+      root.setProperty("--on-accent", readableOn(c.accent));
+
+      $("logo").textContent = settings.profile === "boy" ? "👕" : "👗";
+      $("c-accent").value = c.accent;
+      $("c-bg").value = c.bg;
+      $("c-surface").value = c.surface;
+      $("c-text").value = c.text;
+
+      document.querySelectorAll("[data-profile-set]").forEach(b => {
+        b.classList.toggle("on", b.dataset.profileSet === settings.profile);
+      });
+    }
+
+    async function saveSettings() {
+      try {
+        await put("settings", settings);
+      } catch {
+        notify("Réglages non enregistrés.");
+      }
+    }
+
+    function chooseProfile(profile, stay = false) {
+      if (!settings || settings.profile !== profile || !hasChosen) {
+        settings = { profile, colors: { ...PRESETS[profile] } };
+      }
+      hasChosen = true;
+      applyTheme();
+      saveSettings();
+      $("welcome").hidden = true;
+      if (!stay) showPage("dressing");
+    }
+
+    let hasChosen = false;
+
+    function openMenu() {
+      $("backToApp").hidden = !hasChosen;
+      $("welcome").hidden = false;
+    }
+
+    /* ---------- Navigation ---------- */
+    function showPage(name) {
+      pages.forEach(id => { $(id).hidden = id !== name; });
+      document.querySelectorAll("[data-page]").forEach(button => {
+        button.classList.toggle("active", button.dataset.page === name);
+      });
+      render();
+    }
+
+    /* ---------- Stockage ---------- */
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open("mon-dressing-html", 1);
+        request.onupgradeneeded = () => request.result.createObjectStore("storage");
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function put(key, value) {
+      if (!db) return Promise.reject(new Error("Stockage indisponible."));
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction("storage", "readwrite");
+        transaction.objectStore("storage").put(value, key);
+        transaction.oncomplete = resolve;
+        transaction.onerror = () => reject(transaction.error);
+        transaction.onabort = () => reject(transaction.error);
+      });
+    }
+
+    function get(key) {
+      return new Promise((resolve, reject) => {
+        const request = db.transaction("storage").objectStore("storage").get(key);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function save(next) {
+      await put("data", next);
+      data = next;
+      render();
+    }
+
+    /* ---------- Rendu ---------- */
+    function image(photo, name) {
+      const img = document.createElement("img");
+      img.src = photo;
+      img.alt = name;
+      img.loading = "lazy";
+      return img;
+    }
+
+    function button(text, action, className = "") {
+      const element = document.createElement("button");
+      element.type = "button";
+      element.textContent = text;
+      element.className = className;
+      element.onclick = action;
+      return element;
+    }
+
+    function empty(container, text) {
+      const p = document.createElement("p");
+      p.className = "empty";
+      p.textContent = text;
+      container.append(p);
+    }
+
+    function clothingCard(item, mode) {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      if (mode === "pick" && selected.has(item.id)) card.classList.add("selected");
+
+      card.append(image(item.photo, item.name));
+
+      const title = document.createElement("strong");
+      title.textContent = item.name;
+      card.append(title);
+
+      const category = document.createElement("small");
+      category.textContent = item.category;
+      card.append(category);
+
+      if (mode === "delete") {
+        card.append(button("Supprimer", async () => {
+          if (!confirm("Supprimer ce vêtement et le retirer des tenues ?")) return;
+          try {
+            await save({
+              clothes: data.clothes.filter(i => i.id !== item.id),
+              outfits: data.outfits
+                .map(o => ({ ...o, ids: o.ids.filter(id => id !== item.id) }))
+                .filter(o => o.ids.length)
+            });
+            selected.delete(item.id);
+            render();
+          } catch {
+            notify("Suppression impossible.");
+          }
+        }, "danger"));
+      } else {
+        const chosen = selected.has(item.id);
+        const control = button(
+          chosen ? "Retirer" : "Choisir",
+          () => {
+            if (selected.has(item.id)) selected.delete(item.id);
+            else selected.add(item.id);
+            render();
+          },
+          chosen ? "secondary" : ""
+        );
+        control.setAttribute("aria-pressed", String(chosen));
+        card.append(control);
+      }
+
+      return card;
+    }
+
+    function render() {
+      for (const id of ["clothes", "selection", "picker", "outfits"]) {
+        $(id).replaceChildren();
+      }
+
+      const filtered = data.clothes.filter(item =>
+        $("filter").value === "Tout" || item.category === $("filter").value
+      );
+
+      filtered.forEach(item => $("clothes").append(clothingCard(item, "delete")));
+      if (!filtered.length) empty($("clothes"), "Aucun vêtement ici pour le moment.");
+
+      data.clothes.forEach(item => {
+        $("picker").append(clothingCard(item, "pick"));
+        if (selected.has(item.id)) $("selection").append(clothingCard(item, "pick"));
+      });
+
+      if (!selected.size) empty($("selection"), "Ta tenue apparaîtra ici.");
+      if (!data.clothes.length) empty($("picker"), "Ajoute d’abord des photos dans ton dressing.");
+
+      data.outfits.forEach(outfit => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const photos = document.createElement("div");
+        photos.className = "look-photos";
+        outfit.ids.forEach(id => {
+          const item = data.clothes.find(i => i.id === id);
+          if (item) photos.append(image(item.photo, item.name));
+        });
+
+        const title = document.createElement("strong");
+        title.textContent = outfit.name;
+        card.append(photos, title);
+
+        card.append(button("Recomposer", () => {
+          selected = new Set(outfit.ids);
+          $("outfitName").value = outfit.name;
+          showPage("composer");
+        }));
+
+        card.append(button("Supprimer", async () => {
+          if (!confirm("Supprimer cette tenue ?")) return;
+          try {
+            await save({ ...data, outfits: data.outfits.filter(o => o.id !== outfit.id) });
+          } catch {
+            notify("Suppression impossible.");
+          }
+        }, "danger"));
+
+        $("outfits").append(card);
+      });
+
+      if (!data.outfits.length) empty($("outfits"), "Tes tenues enregistrées apparaîtront ici.");
+    }
+
+    /* ---------- Photos ---------- */
+    async function loadPhoto(file) {
+      if (!file) return;
+
+      currentPhoto = null;
+      $("preview").hidden = true;
+      $("addButton").disabled = true;
+
+      let url;
+
+      try {
+        if (!file.type.startsWith("image/")) throw new Error("Choisis un fichier image.");
+        if (file.size > 30 * 1024 * 1024) throw new Error("Photo trop volumineuse : 30 Mo maximum.");
+
+        url = URL.createObjectURL(file);
+        const img = new Image();
+        img.src = url;
+        await img.decode();
+
+        const scale = Math.min(1, 1200 / Math.max(img.naturalWidth, img.naturalHeight));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+
+        const context = canvas.getContext("2d");
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        currentPhoto = canvas.toDataURL("image/jpeg", 0.85);
+        $("preview").src = currentPhoto;
+        $("preview").hidden = false;
+      } catch (error) {
+        notify(error.message || "Impossible de lire cette image.");
+      } finally {
+        if (url) URL.revokeObjectURL(url);
+        $("addButton").disabled = false;
+      }
+    }
+
+    /* ---------- Événements ---------- */
+    $("camera").onchange = e => loadPhoto(e.target.files[0]);
+    $("gallery").onchange = e => loadPhoto(e.target.files[0]);
+    $("filter").onchange = render;
+
+    document.querySelectorAll("[data-page]").forEach(b => {
+      b.onclick = () => showPage(b.dataset.page);
+    });
+
+    document.querySelectorAll("[data-profile]").forEach(b => {
+      b.onclick = () => chooseProfile(b.dataset.profile);
+    });
+
+    $("homeBtn").onclick = openMenu;
+    $("backToApp").onclick = () => { $("welcome").hidden = true; };
+
+    document.querySelectorAll("[data-profile-set]").forEach(b => {
+      b.onclick = () => {
+        chooseProfile(b.dataset.profileSet, true);
+        notify(b.dataset.profileSet === "girl" ? "Style Fille activé 💗" : "Style Garçon activé 💙");
+      };
+    });
+
+    // Réglages des couleurs
+    const colorFields = { "c-accent": "accent", "c-bg": "bg", "c-surface": "surface", "c-text": "text" };
+    let settingsTimer;
+    Object.entries(colorFields).forEach(([id, key]) => {
+      $(id).oninput = e => {
+        if (!settings) return;
+        settings.colors[key] = e.target.value;
+        applyTheme();
+        clearTimeout(settingsTimer);
+        settingsTimer = setTimeout(saveSettings, 300);
+      };
+    });
+
+    QUICK.forEach(color => {
+      const swatch = document.createElement("button");
+      swatch.type = "button";
+      swatch.className = "swatch";
+      swatch.style.background = color;
+      swatch.setAttribute("aria-label", "Couleur " + color);
+      swatch.onclick = () => {
+        settings.colors.accent = color;
+        applyTheme();
+        saveSettings();
+      };
+      $("swatches").append(swatch);
+    });
+
+    $("darkMode").onclick = () => {
+      Object.assign(settings.colors, { bg: "#14171c", surface: "#1f242b", text: "#f2f2f5" });
+      applyTheme();
+      saveSettings();
+    };
+
+    $("lightMode").onclick = () => {
+      const base = PRESETS[settings.profile] || PRESETS.girl;
+      Object.assign(settings.colors, { bg: base.bg, surface: base.surface, text: base.text });
+      applyTheme();
+      saveSettings();
+    };
+
+    $("resetColors").onclick = () => {
+      settings.colors = { ...PRESETS[settings.profile] };
+      applyTheme();
+      saveSettings();
+      notify("Couleurs réinitialisées.");
+    };
+
+    $("addForm").onsubmit = async event => {
+      event.preventDefault();
+
+      const name = $("name").value.trim();
+      if (!currentPhoto) return notify("Ajoute d’abord une photo.");
+      if (!name) return notify("Donne un nom à ton vêtement.");
+
+      $("addButton").disabled = true;
+
+      try {
+        await save({
+          ...data,
+          clothes: [{ id: uid(), name, category: $("category").value, photo: currentPhoto }, ...data.clothes]
+        });
+
+        $("addForm").reset();
+        $("preview").hidden = true;
+        currentPhoto = null;
+        notify("Vêtement ajouté !");
+      } catch {
+        notify("Enregistrement impossible. Vérifie l’espace disponible.");
+      } finally {
+        $("addButton").disabled = false;
+      }
+    };
+
+    $("outfitForm").onsubmit = async event => {
+      event.preventDefault();
+
+      const name = $("outfitName").value.trim();
+      if (!selected.size) return notify("Choisis au moins un vêtement.");
+      if (!name) return notify("Donne un nom à ta tenue.");
+
+      try {
+        await save({
+          ...data,
+          outfits: [{ id: uid(), name, ids: [...selected] }, ...data.outfits]
+        });
+
+        selected.clear();
+        $("outfitForm").reset();
+        showPage("tenues");
+        notify("Tenue enregistrée !");
+      } catch {
+        notify("Impossible d’enregistrer cette tenue.");
+      }
+    };
+
+    $("export").onclick = () => {
+      const blob = new Blob([JSON.stringify({ version: 1, ...data })], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "mon-dressing.json";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    };
+
+    $("restore").onchange = async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        if (file.size > 150 * 1024 * 1024) throw new Error("Sauvegarde trop volumineuse.");
+
+        const backup = JSON.parse(await file.text());
+
+        if (backup.version !== 1 || !Array.isArray(backup.clothes) || !Array.isArray(backup.outfits)) {
+          throw new Error("Sauvegarde invalide.");
+        }
+
+        const ids = new Set();
+
+        for (const item of backup.clothes) {
+          if (
+            !item ||
+            typeof item.id !== "string" ||
+            ids.has(item.id) ||
+            typeof item.name !== "string" ||
+            !item.name.trim() ||
+            item.name.length > 60 ||
+            !categories.includes(item.category) ||
+            typeof item.photo !== "string" ||
+            !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(item.photo)
+          ) {
+            throw new Error("Vêtement invalide dans la sauvegarde.");
+          }
+          ids.add(item.id);
+        }
+
+        const outfitIds = new Set();
+
+        for (const outfit of backup.outfits) {
+          if (
+            !outfit ||
+            typeof outfit.id !== "string" ||
+            outfitIds.has(outfit.id) ||
+            typeof outfit.name !== "string" ||
+            !outfit.name.trim() ||
+            outfit.name.length > 60 ||
+            !Array.isArray(outfit.ids) ||
+            !outfit.ids.length ||
+            outfit.ids.some(id => !ids.has(id))
+          ) {
+            throw new Error("Tenue invalide dans la sauvegarde.");
+          }
+          outfitIds.add(outfit.id);
+        }
+
+        if (!confirm("Remplacer ton dressing actuel par cette sauvegarde ?")) return;
+
+        await save({ clothes: backup.clothes, outfits: backup.outfits });
+        selected.clear();
+        render();
+        notify("Sauvegarde restaurée !");
+      } catch (error) {
+        notify(error.message || "Import impossible.");
+      } finally {
+        event.target.value = "";
+      }
+    };
+
+    /* ---------- Démarrage ---------- */
+    async function start() {
+      try {
+        db = await openDatabase();
+        const stored = await get("data");
+        if (stored) data = stored;
+        const storedSettings = await get("settings");
+        if (storedSettings && storedSettings.colors && PRESETS[storedSettings.profile]) {
+          settings = storedSettings;
+          hasChosen = true;
+        }
+      } catch {
+        $("addButton").disabled = true;
+        notify("Ce navigateur ne permet pas le stockage local.");
+      }
+
+      if (settings) {
+        applyTheme();
+      } else {
+        settings = { profile: "girl", colors: { ...PRESETS.girl } };
+        applyTheme();
+        $("welcome").hidden = false;
+      }
+      render();
+    }
+
+    start();
+  </script>
+</body>
+</html>
